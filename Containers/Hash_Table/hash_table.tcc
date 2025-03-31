@@ -130,7 +130,7 @@ void unordered_map<Key, T, Hash>::max_load_factors(float ml) {
 template <class Key, class T, class Hash>
 void unordered_map<Key,T,Hash>::insert(const Key& key, const T& value) {
     if(max_load_factor < load_factor()) {
-        rehash(nextPrime(bucket_count));
+        rehash(nextPrime(bucket_count * 2));
     }
 
     int index = hash_function()(key) % bucket_count;
