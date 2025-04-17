@@ -21,30 +21,33 @@ private:
 private:
     Node *root;
 private:
-    Node* insert(Node *root, T val);
-    Node* search(Node* root,T val);
-    Node *deleteNode(Node* root, T val);
+    Node* insert(Node *root, const T& val);
+    Node* search(Node* root,const T& val) const;
+    Node *deleteNode(Node* root, const T& val);
     void printInorder(Node * root);
     void printPostorder(Node* root);
     void printPreorder(Node* root);
-    Node* getSuccessor(Node* root, T target);
-    Node* getPredecessor(Node* root, T target);
+    Node* getSuccessor(Node* root, const T& target);
+    Node* getPredecessor(Node* root, const T& target);
 
-    Node* leftMost(Node* node);
-    Node* rightMost(Node* node);
-    
+    size_t getHeight(Node* node) const;
 public:
     BST();
-    void insert(T val);
-    bool search(T val);
-    void deleteNode(T val);
+    void insert(const T& val);
+    bool search(const T& val) const;
+    void deleteNode(const T& val);
 
     void printInorder();
     void printPostorder();
     void printPreorder();
 
-    Node* getSuccessor(T target);
-    Node* getPredecessor(T target);
+    Node* getSuccessor(const T& target);
+    Node* getPredecessor(const T& target);
+
+    size_t getHeight() const;
+    void destroyTree(Node* root);
+    ~BST();
+
 };
 
 #include "impl.tcc"

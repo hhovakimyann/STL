@@ -3,20 +3,40 @@
 template <typename T>
 BST<T>::BST() : root(nullptr) {}
 
+
+template <class T>
+BST<T>::~BST() {
+    destroyTree(root);
+}
+
 template <typename T>
-void BST<T>::insert(T val)
+void BST<T>::insert(const T& val)
 {
     root = insert(root, val);
 }
 
 template <typename T>
-bool BST<T>::search(T val)
+bool BST<T>::search(const T& val) const 
 {
     return search(root, val) != nullptr;
 }
 
+template <class T>
+size_t BST<T>::getHeight() const {
+    return getHeight(root);
+}
+
+
+template <class T>
+size_t BST<T>::getHeight(Node * root) const {
+    if(!root) 
+        return 0;
+
+    return 1 + std::max(getHeight(root->left), getHeight(root->right));
+}
+
 template <typename T>
-void BST<T>::deleteNode(T val)
+void BST<T>::deleteNode(const T& val)
 {
     root = deleteNode(root, val);
 }
@@ -47,17 +67,17 @@ void BST<T>::printPreorder()
 
 
 template <typename T>
-typename BST<T>::Node *BST<T>::getSuccessor(T target)
+typename BST<T>::Node *BST<T>::getSuccessor(const T& val)
 {
-    return getSuccessor(root,target);
+    return getSuccessor(root,val);
 }
 template <typename T>
-typename BST<T>::Node *BST<T>::getPredecessor(T target)
+typename BST<T>::Node *BST<T>::getPredecessor(const T& val)
 {
-    return getPredecessor(root,target);
+    return getPredecessor(root,val);
 }
 template <typename T>
-typename BST<T>::Node *BST<T>::insert(typename BST<T>::Node *root, T val)
+typename BST<T>::Node *BST<T>::insert(typename BST<T>::Node *root, const T& val)
 {
     if(!root) return new Node(val);
 
@@ -69,7 +89,7 @@ typename BST<T>::Node *BST<T>::insert(typename BST<T>::Node *root, T val)
     return root;
 }
 template <typename T>
-typename BST<T>::Node* BST<T>::search(typename BST<T>::Node* root, T val)
+typename BST<T>::Node* BST<T>::search(typename BST<T>::Node* root, const T& val) const
 {
     if (!root) {
         return nullptr;
@@ -87,7 +107,7 @@ typename BST<T>::Node* BST<T>::search(typename BST<T>::Node* root, T val)
 
 
 template <typename T>
-typename BST<T>::Node *BST<T>::deleteNode(typename BST<T>::Node *root, T val)
+typename BST<T>::Node *BST<T>::deleteNode(typename BST<T>::Node *root, const T& val)
 {
     if(!root) return root;
     
@@ -113,50 +133,25 @@ typename BST<T>::Node *BST<T>::deleteNode(typename BST<T>::Node *root, T val)
     return root;
 }
 
-template <class T>
-typename BST<T>::Node * BST<T>::leftMost(typename BST<T>::Node *root) {
-    Node *current = root;
-    while(root && root->left) {
-        root = root->left;
-    }
-    return root;
-}
-
 template <typename T>
-typename BST<T>::Node *BST<T>::getSuccessor(typename BST<T>::Node *root, T val)
+typename BST<T>::Node *BST<T>::getSuccessor(typename BST<T>::Node *root, const T& val)
 {
+    Node * temp = nullptr;
 
-    if(!root) return nullptr;
-
-    if(root->val == val && root->right) {
-        return leftMost(root->right);
-    }
-
-
-    Node* curr = root;
-    Node* prev = nullptr;
-
-    while(curr) {
-        if(val < curr->val) {
-            prev = curr;
-            curr = curr->left;
-        }else {
-            curr = curr->right;
+    while(root) {
+        if(root->val > val) {
+            temp = root;
+            root = root->left;
+        }else{
+            root = root->right;
         }
     }
-    return prev;
-}
-
-template<class T>
-typename BST<T>::Node *BST<T>::rightMost(typename BST<T>::Node *root) {
-
-    Node* temp = root->left;
-    while (temp && temp->right) temp = temp->right;
     return temp;
 }
 
+
 template <typename T>
-typename BST<T>::Node *BST<T>::getPredecessor(typename BST<T>::Node *root, T val)
+typename BST<T>::Node *BST<T>::getPredecessor(typename BST<T>::Node *root, const T& val)
 {
     if (!root) return nullptr;
 
@@ -214,3 +209,12 @@ void BST<T>::printPreorder(Node* root)
     printPreorder(root->right);
 }
 
+template <class T>
+void BST<T>::destroyTree(typename BST<T>::Node *node)
+{
+    if (!node)
+        return;
+    destroyTree(node->left);
+    destroyTree(node->right);
+    delete node;
+}
