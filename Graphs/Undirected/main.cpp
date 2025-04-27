@@ -2,7 +2,7 @@
 
 int main()
 {
-    Graph<int> gp;
+    Graph<int> gp(6);
     gp.addEdge(1, 2);
     gp.addEdge(2, 3);
     gp.addEdge(3, 4);
@@ -15,7 +15,7 @@ int main()
         std::cout << node << " ";
     std::cout << "\n";
 
-    Graph<char> g;
+    Graph<char> g(6);
     g.addEdge('A', 'B');
     g.addEdge('A', 'C');
     g.addEdge('B', 'D');

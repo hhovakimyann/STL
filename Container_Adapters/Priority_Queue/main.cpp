@@ -75,7 +75,7 @@ int main() {
     test_swap();
 
 
-    priority_queue<int, std::vector<int>, std::greater<int>> pq;
+    priority_queue<int> pq;
     pq.push(1);
     pq.push(2);
     pq.push(3);
@@ -84,10 +84,10 @@ int main() {
     pq.push(6);
     pq.push(7);
     pq.push(8);
-    pq.push(9);
-
-    for( auto it = pq.begin(); it != pq.end(); it++) {
-        std::cout << *it << " ";
+    pq.push(9);    
+    while (!pq.empty()) {
+        std::cout << pq.top() << " ";
+        pq.pop();
     }
     std::cout << std::endl;
     cout << "All tests passed successfully!" << endl;
