@@ -1,31 +1,32 @@
 #include <iostream>
 #include <vector>
 
-int partition(std::vector<int>&vec, int left,int right) {
-    int pivot = vec[right];
-    int i = left;
-    int j = right - 1;
+int partition(std::vector<int>& vec, int start, int end) {
+    int i = start;
+    int j = end - 1;
+    int val = vec[end];
 
     while(i <= j) {
-        while(i <= j && vec[i] < pivot) {
-            i++;
-        }
-        while(i <= j && vec[j] >= pivot) {
+        while(i <= j && vec[j] >= val) {
             j--;
         }
+        while(i <= j && vec[i] <= val) {
+            i++;
+        }
         if(i < j) {
-            std::swap(vec[i], vec[j]);
+            std::swap(vec[i],vec[j]);
         }
     }
-    std::swap(vec[i], vec[right]);
+    std::swap(vec[i],vec[end]);
     return i;
 }
-void quick_sort(std::vector<int>&nums, int left, int right) {
-    if(left >= right) return;
-    int index = partition(nums,left,right);
 
-    quick_sort(nums,left,index - 1);
-    quick_sort(nums,index + 1, right);
+void quick_sort(std::vector<int>& vec, int start, int end) {
+   if(start > end) return;
+   int index = partition(vec,start,end);
+   quick_sort(vec,start,index - 1);
+   quick_sort(vec,index + 1, end);
+   return;
 }
 int main () {
     std::vector<int> vec = {4,5,9,3,1,6,0,22,37,99};

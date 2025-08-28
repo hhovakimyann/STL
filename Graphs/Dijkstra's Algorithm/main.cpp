@@ -23,23 +23,23 @@ public:
     }
 
     std::vector<double> dijkstraAlgorithm(int start) {
-        std::vector<double> dist(_v, std::numeric_limits<double>::max());
+        std::vector<double> dist(_v,std::numeric_limits<double>::max());
         dist[start] = 0.0;
 
-        std::priority_queue<std::pair<double,int>, std::vector<std::pair<double,int>>, std::greater<std::pair<double,int>>> pq;
+        std::priority_queue<std::pair<double,int>, std::vector<std::pair<double,int>>, std::greater<>> pq;
         pq.push({0.0,start});
 
-        
         while(!pq.empty()) {
-            auto [d,u] = pq.top();
+            auto [distance,current] = pq.top();
             pq.pop();
-            if(dist[u] < d) continue;
-            for(const auto& [vertex, weight] : graph[u]) {
-                if(dist[vertex] > dist[u] + weight) {
-                    dist[vertex] = dist[u] + weight;
-                    pq.push({dist[vertex],vertex});
+
+            if(dist[current] < distance) continue;
+            for(const auto& [dest,w] : graph[current]) {
+                if(dist[dest] > dist[current] + w) {
+                    dist[dest] = dist[current] + w;
+                    pq.push({dist[dest],dest});
                 }
-            }
+            } 
         }
         return dist;
     }

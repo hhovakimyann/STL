@@ -2,25 +2,20 @@
 #include <vector>
 
 std::vector<int> counting_sort(std::vector<int>& vec) {
-    int size = vec.size();
-    int max = 0;
-    for(int i = 0; i < size; i++) {
-        max = std::max(max,vec[i]);
+
+    int maxElem = *std::max_element(vec.begin(),vec.end());
+    std::vector<int> counting(maxElem + 1,0);
+    for(int i = 0; i < vec.size(); ++i) {
+        ++counting[vec[i]];
     }
 
-    std::vector<int> counting(max);
-    for(int i = 0; i < size; i++) {
-        counting[vec[i]]++;
-    }
-
-    for(int i = 1; i <= max; i++) {
+    for(int i = 1; i <= maxElem; ++i) {
         counting[i] += counting[i - 1];
     }
-
-    std::vector<int> output(size);
-    for(int i = size - 1; i >= 0; i--) {
+    std::vector<int> output(vec.size());
+    for(int i = vec.size() - 1; i >= 0;i--) {
         output[counting[vec[i]] - 1] = vec[i];
-        counting[vec[i]]--;
+        --counting[vec[i]];
     }
     return output;
 }

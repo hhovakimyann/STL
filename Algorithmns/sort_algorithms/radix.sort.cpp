@@ -3,12 +3,12 @@
 
 void countingSort(std::vector<int> &vec, int exp) {
     std::vector<int> output(vec.size());
-    std::vector<int> counting(vec.size());
+    std::vector<int> counting(10);
     for(int i = 0; i < vec.size() ; i++) {
         counting[(vec[i] / exp) % 10]++;
     }
 
-    for(int i = 1; i <= vec.size() ; i++) {
+    for(int i = 1; i < 10 ; i++) {
         counting[i] += counting[i - 1];
     }
 

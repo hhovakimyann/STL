@@ -41,20 +41,20 @@ typename AVL<T>::Node *AVL<T>::insert(typename AVL<T>::Node *node, const T &val)
     int rightHeight = getHeight(node->right);
     int bf = leftHeight - rightHeight;
 
-    if (bf > 1 && node->left->val > val)
+    if (bf > 1 && node->left->val > val) //ll
     {
         return rightRotate(node);
     }
-    else if (bf > 1 && node->left->val < val)
+    else if (bf > 1 && node->left->val < val) // lr
     {
         node->left = leftRotate(node->left);
         return rightRotate(node);
     }
-    else if (bf < -1 && node->right->val > val)
+    else if (bf < -1 && node->right->val > val) //rr
     {
         return leftRotate(node);
     }
-    else if (bf < -1 && node->right->val < val)
+    else if (bf < -1 && node->right->val < val) //rl
     {
         node->right = rightRotate(node->right);
         return leftRotate(node);

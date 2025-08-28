@@ -5,15 +5,13 @@ void insertion_sort(std::vector<int>& nums) {
     int index = 0;
     int value = 0;
 
-    for(int i = 1; i < nums.size(); i++) {
+    for(int i = 1; i < nums.size(); ++i) {
         index = i - 1;
         value = nums[i];
-
         while(index >= 0 && nums[index] > value) {
-            nums[index + 1] =  nums[index];
-            index--;
+            nums[index + 1] = nums[index];
+            --index ;
         }
-
         nums[index + 1] = value;
     }
 }

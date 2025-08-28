@@ -26,41 +26,41 @@ public:
     }
 
     void tarjanHelper(int vertex) {
-        ids[vertex] = low_links[vertex] = id++;
         onStack[vertex] = true;
+        ids[vertex] = low_links[vertex] = ++id;
         st.push(vertex);
-        for(const int x : graph[vertex]) {
-            if(ids[x] == -1) {
-                tarjanHelper(x);
-                low_links[vertex] = std::min(low_links[vertex], low_links[x]);
+
+        for(const int i : graph[vertex]) {
+            if(ids[i] == -1) {
+                tarjanHelper(i);
             }
-            if(onStack[x]) {
-                low_links[vertex] = std::min(low_links[x], ids[x]);
+            if(onStack[i]) {
+                low_links[vertex] = std::min(low_links[vertex],low_links[i]);
             }
         }
-
         if(ids[vertex] == low_links[vertex]) {
             std::vector<int> scc;
             while(1) {
                 int node = st.top();
                 st.pop();
-                scc.push_back(node);
                 onStack[node] = false;
-                if(vertex == node) break;
-            } 
+                scc.push_back(node);
+                if(node == vertex) break;
+            }
             sccs.push_back(scc);
         }
     }
 
     void tarjanAlgorithm() {
+        onStack.assign(_v,false);
         ids.assign(_v,-1);
         low_links.assign(_v,-1);
-        onStack.assign(_v,false);
-        for(int i = 0; i < _v; i++) {
+        for(int i = 0; i < _v; ++i) {
             if(ids[i] == -1) {
                 tarjanHelper(i);
             }
         }
+
     } 
 
     void printSccs() {

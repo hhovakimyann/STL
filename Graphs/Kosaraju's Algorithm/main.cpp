@@ -18,55 +18,50 @@ public:
     }
     void dfs(std::vector<bool>& visited, std::stack<int>& st, int vertex) {
         visited[vertex] = true;
-
-        for(const int x : graph[vertex]) {
-            if(!visited[x]) {
-                dfs(visited,st,x);
+        for(const int i : graph[vertex]) {
+            if(!visited[i]) {
+                dfs(visited,st,i);
             }
         }
         st.push(vertex);
     }
     std::vector<std::vector<int>> transpose() {
-        std::vector<std::vector<int>> graphTranspose(_v);
-        for(int i = 0; i < _v; i++) {
-            for(const int v : graph[i]) {
-                graphTranspose[v].push_back(i);
+        std::vector<std::vector<int>> tg(_v);   
+        for(int i = 0; i < _v; ++i) {
+            for(const int j : graph[i]) {
+                tg[i].push_back(j);
             }
         }
-        return graphTranspose;
+        return tg;
     }
     void dfs(std::vector<bool>&visited, std::vector<std::vector<int>>& graph,int vertex) {
         visited[vertex] = true;
         std::cout << vertex << " ";
-
-        for(const int x : graph[vertex]) {
-            if(!visited[x]) {
-                dfs(visited,graph,x);
+        for(const int j : graph[vertex]) {
+            if(!visited[j]) {
+                dfs(visited,graph,j);
             }
         }
     }
     void kosarajuAlgorithm() {
-        std::vector<bool> visited(_v, false);
+        std::vector<bool> visited(_v,false);
         std::stack<int> st;
 
-        for(int i = 0 ; i < _v ; i++) {
-            for(const int x : graph[i]) {
-                if(!visited[x]) {
-                    dfs(visited,st,x);
-                }
+        for(int i = 0; i <_v; ++i) {
+            if(!visited[i]) {
+                dfs(visited,st,i);
             }
         }
-
-        std::vector<std::vector<int>> transposeGraph = transpose();
+        std::vector<std::vector<int>> tg = transpose();
         std::fill(visited.begin(),visited.end(),false);
-
         while(!st.empty()) {
             int node = st.top();
             st.pop();
-
-            if(!visited[node]) {
-                dfs(visited,transposeGraph,node);
-                std::cout << std::endl;
+            for(const int i : graph[node]) {
+                if(!visited[i]) {
+                    dfs(visited,tg,i);
+                    std::cout << std::endl;
+                }
             }
         }
     }
