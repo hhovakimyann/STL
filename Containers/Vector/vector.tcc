@@ -241,7 +241,7 @@ void Vector<T>::shrink_to_fit() {
     }
 }
 template <typename T>
-std::size_t max_size() noexcept {
+typename Vector<T>::size_type max_size() noexcept {
     return std::numeric_limits<std::size_t>::max() / sizeof(std::size_t);
 }
 
@@ -258,44 +258,59 @@ void Vector<T>::clear() noexcept{
 
 template <typename T>
 void Vector<T>::push_back(const_reference value){ // add element at end of Vector<T>
-    if(m_size == m_capacity) {
-        reallocate(m_capacity ? m_capacity * 2 : 1);
-    }
-
-    m_data[m_size++] = value; 
+    emplace_back(value);
 }
 template <typename T>
 void Vector<T>::push_back(reference_refer value) { //add temp element at end of vector
-    if (m_size >= m_capacity) {
-        reserve(m_capacity ? m_capacity * 2 : 1);
+    emplace_back(std::move(value));
+}
+
+template <typename T>
+template <typename ... Args>
+typename Vector<T>::reference Vector<T>::emplace_back(Args&& ... args) {
+    if(m_size == m_capacity) {
+        reallocate(m_capacity == 0 ? 1 : m_capacity * 2);
     }
-    m_data[m_size++] = std::move(value);
+
+    new (m_data + m_size) T(std::forward<Args>(args)...);
+    ++m_size;
+    return back();
+}
+
+template <typename T>
+template <typename ... Args>
+typename Vector<T>::iterator Vector<T>::emplace(typename Vector<T>::size_type pos, Args && ...args) {
+    if(m_size < pos) throw std::out_of_range("Out Of Range Position");
+
+    if(m_size == m_capacity) {
+        reallocate(m_capacity == 0 ? 1 : m_capacity * 2);
+    }
+
+    for(typename Vector<T>::size_type i = m_size; i > pos; --i) {
+        new (m_data + i) T(std::move(m_data[i - 1]));
+        m_data[i - 1].~T();
+    }
+
+    new (m_data + pos) T(std::forward<Args>(args)...);
+    ++m_size;
+    return iterator(m_data + pos);
 }
 template <typename T>
 void Vector<T>::pop_back() { // remove element at the end
-    if (m_size > 0) {
-        --m_size;
-    }else {
-        throw std::out_of_range("No elements");
-    }
+    if(empty()) throw std::out_of_range("No Element In Vector For Pop"); 
+    return m_data[--m_size].~T();
 }
 template <typename T>
 void Vector<T>::resize(size_type count,const_reference value) { // resize vector and add elements with value
-    if (count > m_size) {
-        pointer new_data = new value_type[count];
-        for (size_t i = 0; i < m_size; i++) {
-            new_data[i] = m_data[i];
-        }
-        for (size_t i = m_size; i < count; i++) {
-            new_data[i] = value;
-        }
-        delete[] m_data;
-        m_data = new_data;
-        m_capacity = count;
-        m_size = count;
+    if (count < m_size) {
+        for (size_type i = count; i < m_size; ++i)
+            m_data[i].~T();
     } else {
-        m_size = count;
+        reserve(count);
+        for (size_type i = m_size; i < count; ++i)
+            emplace_back();
     }
+    m_size = count;
 }
 template <typename T>
 void Vector<T>::resize(size_type count) { // resize vector 

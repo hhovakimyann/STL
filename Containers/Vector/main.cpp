@@ -4,6 +4,14 @@
 int main() {
     using namespace my_std;
 
+
+    Vector<int> vec;
+    vec.emplace_back(7);
+    vec.emplace(0,1);
+    for(auto it = vec.begin(); it != vec.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
     Vector<int> vec1;
     std::cout << "vec1 created. Size: " << vec1.size() << std::endl;
 
